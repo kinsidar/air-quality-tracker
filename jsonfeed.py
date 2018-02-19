@@ -8,4 +8,9 @@ url = "https://api.waqi.info/feed/geo:" + lat + ";" + lon + "/?token=" + aqicn_t
 
 response = urllib.urlopen(url)
 data = json.loads(response.read())
-print(data)
+print("pollutants & weather conditions\n")
+
+#json structure at: http://aqicn.org/json-api/doc/
+print(data['data']['aqi'])
+
+
