@@ -1,7 +1,9 @@
 from pubnub.pnconfiguration import PNConfiguration
-from pubnub.pubnub import PubNub, SubscribeListener
+from pubnub.pubnub import PubNub
+# from pubnub.pubnub import SubscribeListener
 from pubnub.exceptions import PubNubException
 from pubnub.enums import PNStatusCategory
+import threading
 
 pnconfig = PNConfiguration()
 pnconfig.subscribe_key = 'sub-c-ce1f7efa-0bda-11e8-8ffb-b29a975517c3'
@@ -11,21 +13,25 @@ pnconfig.ssl = True
 #initialize pubnub with configuration settings
 pubnub = PubNub(pnconfig)
 
-my_listener = SubscribeListener()
-pubnub.add_listener(my_listener)
+# my_listener = SubscribeListener()
+# pubnub.add_listener(my_listener)
 
-pubnub.subscribe().channels('aqi').execute()
-my_listener.wait_for_connect()
-print('connected')
+def set_interval():
+    pubnub.publish().channel('aqi').message({
+        'aqi': 'over 9000',
+        'co2': 21
+    }).sync()
+    threading.Timer(10.0, set_interval).start()
 
-pubnub.publish().channel('aqi').message({
-    'aqi': 'over 9000',
-    'co2': 21
-}).sync()
+threading.Timer(10.0, set_interval).start()
 
-result = my_listener.wait_for_message_on('aqi')
-print(result.message)
-print("end of message")
+# pubnub.subscribe().channels('aqi').execute()
+# my_listener.wait_for_connect()
+# print('connected')
+
+# result = my_listener.wait_for_message_on('aqi')
+# print(result.message)
+# print("end of message")
 
 
 
