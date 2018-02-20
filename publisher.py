@@ -6,8 +6,11 @@ from pubnub.enums import PNStatusCategory
 # import threading
 import urllib, json
 
-#get json dadta
-url = "https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC&tsyms=USD"
+#get aqi info from aqicn API
+lat = "37.7"
+lon = "-122.1"
+aqicn_token = "214e3324769450fc0bc5688dac030affbc4d48a1"
+url = "https://api.waqi.info/feed/geo:" + lat + ";" + lon + "/?token=" + aqicn_token
 response = urllib.urlopen(url)
 data = json.loads(response.read())
 
@@ -27,7 +30,7 @@ my_listener.wait_for_connect()
 print('connected')  
 
 pubnub.publish().channel('aqi').message({
-    'USD': 11000
+    'aqi': data['data']['aqi']
 }).sync()
 
 result = my_listener.wait_for_message_on('aqi')
@@ -47,10 +50,4 @@ print('unsubscribed')
 
 # threading.Timer(10.0, set_interval).start()
 # print("end of message")
-
-
-
-
-
-
 
