@@ -6,7 +6,7 @@ from pubnub.enums import PNStatusCategory
 # import threading
 import urllib, json
 
-#get aqi info from aqicn API
+#AQICN API info and JSON structure at: http://aqicn.org/json-api/doc/
 lat = "37.7"
 lon = "-122.1"
 aqicn_token = "214e3324769450fc0bc5688dac030affbc4d48a1"
@@ -14,12 +14,11 @@ url = "https://api.waqi.info/feed/geo:" + lat + ";" + lon + "/?token=" + aqicn_t
 response = urllib.urlopen(url)
 data = json.loads(response.read())
 
+#initialize pubnub with configuration settings
 pnconfig = PNConfiguration()
 pnconfig.subscribe_key = 'sub-c-ce1f7efa-0bda-11e8-8ffb-b29a975517c3'
 pnconfig.publish_key = 'pub-c-b43f4454-c2c0-4587-aa51-a6785db8406f'
 pnconfig.ssl = True
-
-#initialize pubnub with configuration settings
 pubnub = PubNub(pnconfig)
 
 my_listener = SubscribeListener()
@@ -29,6 +28,7 @@ pubnub.subscribe().channels('aqi').execute()
 my_listener.wait_for_connect()
 print('connected')  
 
+#publish aqi
 pubnub.publish().channel('aqi').message({
     'aqi': data['data']['aqi']
 }).sync()

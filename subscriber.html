@@ -11,11 +11,29 @@
     <div id="AQIIndex"></div>
 
     <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.1.js"></script>
+    <script type="text/javascript" src="https://pubnub.github.io/eon/v/eon/1.0.0/eon.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://pubnub.github.io/eon/v/eon/1.0.0/eon.css"/>
 
 
     <script type="text/javascript">
         var pubnub = new PubNub({
             subscribeKey: 'sub-c-ce1f7efa-0bda-11e8-8ffb-b29a975517c3'
+        });
+
+        eon.chart({
+            channels: ["aqi"],
+            flow: true,
+            pubnub: pubnub,
+            limit: 100,
+            xType: 'custom',
+            xId: 'pub_time',
+            generate: {
+            bindto: '#AQIIndex',
+            data: {
+                type: 'spline',
+                labels: false
+            }
+            }
         });
         
         pubnub.addListener({
@@ -50,24 +68,12 @@
                 var str = JSON.stringify(message.message)
                 document.write(str)
                 console.log(message);
-                // eon.chart({
-                //     channels: ['aqi'],
-                //     history: true,
-                //     flow: true,
-                //     pubnub: pubnub,
-                //     generate: {
-                //         bindto: '#AQIIndex',
-                //         data: {
-                //         labels: false
-                //         }
-                //     }
-                // });
             }
         })
         pubnub.subscribe({ 
             channels: ['aqi'] 
         });
-
+        
 
 
     </script>
