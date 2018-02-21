@@ -6,13 +6,43 @@
 </head>
 
 <body>
-    <div id="AQIIndex"></div>
-
     <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.20.1.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.12.0.min.js"><\/script>')</script>
+    <script src="http://d3js.org/d3.v3.js" charset="utf-8"></script>
+    <script src="node_modules/epoch-charting/dist/js/epoch.js"></script>
+    <link rel="stylesheet" type="text/css" href="node_modules/epoch-charting/dist/css/epoch.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    
+    <div class="page-header text-center">
+        <h1>AQI Level</h1>
+    </div>
 
+    <div class="container">
+        
+        <div class="col-sm-4">
+            <div id="gaugeChart" class="epoch gauge-large"></div>
+        </div>
+        <div class="col-sm-4">
+            AQI Level advice here
+        </div>
+    </div>
+  
     <script type="text/javascript">
+        // initialize epoch
+        var leftRange = [0, 100];
+        var data = [{ label: 'aqi', range: leftRange, values: [] }];
+        // initialize pubnub
         var pubnub = new PubNub({
             subscribeKey: 'sub-c-ce1f7efa-0bda-11e8-8ffb-b29a975517c3'
+        });
+
+        var chart = $('#gaugeChart').epoch({
+            type: 'time.gauge',
+            value: 0,
+            ticks: 20,
+            ticksize: 10,
+            domain: [0, 2],
         });
         
         pubnub.addListener({
@@ -36,18 +66,15 @@
                 } 
             },
             message: function(message) {
-                var str = JSON.stringify(message.message)
-                document.write(str)
-                console.log(message);
+                var aqi = JSON.stringify(message.message['aqi'])
+                aqi = aqi/100
+                console.log(aqi)
+                chart.push(aqi)
             }
         })
         pubnub.subscribe({ 
-            channels: ['aqi'] 
+            channels: ['aqi']
         });
-        
-
-
     </script>
-    
 </body>
 </html>
