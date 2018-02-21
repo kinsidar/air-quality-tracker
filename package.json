@@ -1,0 +1,22 @@
+{
+  "name": "air-quality-tracker",
+  "version": "1.0.0",
+  "description": "aqi pubnub",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kinsidar/air-quality-tracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kinsidar/air-quality-tracker/issues"
+  },
+  "homepage": "https://github.com/kinsidar/air-quality-tracker#readme",
+  "dependencies": {
+    "epoch-charting": "^0.8.4"
+  }
+}
