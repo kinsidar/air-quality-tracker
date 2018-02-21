@@ -41,22 +41,3 @@ def loop():
 
 if __name__ == "__main__":
    main()
-
-# result = my_listener.wait_for_message_on('aqi')
-# print(result.message)
-
-# pubnub.unsubscribe().channels('awesomeChannel').execute()
-# my_listener.wait_for_disconnect()
-
-# print('unsubscribed')
-
-# def set_interval():
-#     pubnub.publish().channel('aqi').message({
-#         'aqi': 'over 9000',
-#         'co2': 21
-#     }).sync()
-#     threading.Timer(10.0, set_interval).start()
-
-# threading.Timer(10.0, set_interval).start()
-# print("end of message")
-
