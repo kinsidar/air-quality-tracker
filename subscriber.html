@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     
     <div class="page-header text-center">
-        <h1>AQI Level in Oakland, CA</h1>
+        <h1>Air Quality Index Gauge</h1>
     </div>
 
     <div class="container">
@@ -23,11 +23,24 @@
             <div id="gaugeChart" class="epoch gauge-large"></div>
         </div>
         <div class="col-sm-4">
+            <div>City:</div><div id='city'></div>
+            <div>Last scanned:</div><p id='time'></p>
             Above 100 = put your mask on!
         </div>
     </div>
-  
+
     <script type="text/javascript">
+        function displayData(message){
+            var aqi = JSON.stringify(message.message['aqi'])
+            aqi = aqi/100
+            var city = JSON.stringify(message.message['city'])
+            var time = JSON.stringify(message.message['time'])
+            document.getElementById("city").textContent = city;
+            document.getElementById("time").textContent = time;
+            console.log(message)
+            chart.push(aqi)
+        }
+
         // initialize epoch
         var leftRange = [0, 100];
         var data = [{ label: 'aqi', range: leftRange, values: [] }];
@@ -65,10 +78,7 @@
                 } 
             },
             message: function(message) {
-                var aqi = JSON.stringify(message.message['aqi'])
-                aqi = aqi/100
-                console.log(aqi)
-                chart.push(aqi)
+                displayData(message);
             }
         })
         pubnub.subscribe({ 

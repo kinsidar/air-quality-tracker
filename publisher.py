@@ -36,7 +36,9 @@ def loop():
     response = urllib.urlopen(url)
     data = json.loads(response.read())
     pubnub.publish().channel('aqi').message({
-        'aqi': data['data']['aqi']
+        'aqi': data['data']['aqi'],
+        'city': data['data']['city']['name'],
+        'time': data['data']['time']['s']
     }).sync()
 
 if __name__ == "__main__":
