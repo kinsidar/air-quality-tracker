@@ -1,5 +1,3 @@
-# air-quality-tracker
-
 ![Demo Img](img/aqigauge.gif)
 
 ## Air quality index(AQI) display using pubnub and epoch
