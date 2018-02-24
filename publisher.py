@@ -40,6 +40,6 @@ def loop():
         'city': data['data']['city']['name'],
         'time': data['data']['time']['s']
     }).sync()
-
+  
 if __name__ == "__main__":
    main()
