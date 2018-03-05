@@ -4,7 +4,7 @@ from pubnub.pubnub import SubscribeListener
 from pubnub.exceptions import PubNubException
 from pubnub.enums import PNStatusCategory
 import threading
-import urllib, json
+import urllib, json, sys
 
 #AQICN API info and JSON structure at: http://aqicn.org/json-api/doc/
 lat = "37.7"
@@ -30,10 +30,15 @@ def main():
     loop()
 
 def loop():
+    try:
+        response = urllib.request.urlopen(url)
+    except:
+        print("URL Error")
+        sys.exit(0)
+
     threading.Timer(10, loop).start()
 
     #publish aqi
-    response = urllib.urlopen(url)
     data = json.loads(response.read())
     pubnub.publish().channel('aqi').message({
         'aqi': data['data']['aqi'],
