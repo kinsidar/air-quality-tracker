@@ -32,7 +32,7 @@ class myListener(SubscribeCallback):
 
     def presence(self, pubnub, presence):
         print(presence.uuid)
-        aqi_call()
+        publish_aqi()
 
 def main():
     #add listener
@@ -50,18 +50,6 @@ def aqi_call_loop():
     aqi_call()
     threading.Timer(1500, aqi_call_loop).start()
 
-
-# def here_now_callback(result, status):
-#     if status.is_error():
-#         print("here now callback error")
-#         return
-#     for channel_data in result.channels:
-#         print("---")
-#         print("channel: %s" % channel_data.channel_name)
-#         print("occupancy: %s" %channel_data.occupancy)
-#     for occupant in channel_data.occupants:
-#         print("uuid: %s, state: %s" % (occupant.uuid, occupant.state))
-
 def aqi_call():
     try:
         response = urllib.request.urlopen(url)
@@ -69,6 +57,7 @@ def aqi_call():
         sys.exit("url error")
 
     data = json.loads(response.read())
+    global aqi, city, time
     aqi = data['data']['aqi']
     city = data['data']['city']['name']
     time = data['data']['time']['s']
@@ -82,11 +71,6 @@ def publish_aqi():
         }).sync()
     except PubNubException as e:
         handle_exception(e)
-
-    # pubnub.here_now()\
-    # .channels('aqi')\
-    # .include_uuids(True)\
-    # .async(here_now_callback)
 
 if __name__ == "__main__":
    main()
