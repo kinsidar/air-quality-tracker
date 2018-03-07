@@ -18,8 +18,8 @@ time = ""
 
 #initialize pubnub
 pnconfig = PNConfiguration()
-pnconfig.subscribe_key = 'sub-c-ce1f7efa-0bda-11e8-8ffb-b29a975517c3'
-pnconfig.publish_key = 'pub-c-b43f4454-c2c0-4587-aa51-a6785db8406f'
+pnconfig.subscribe_key = 'your sub key'
+pnconfig.publish_key = 'your pub key'
 pnconfig.ssl = True
 pnconfig.uuid = 'aqi publisher'
 
