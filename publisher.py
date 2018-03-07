@@ -12,6 +12,9 @@ lat = "37.7"
 lon = "-122.1"
 aqicn_api_token = "214e3324769450fc0bc5688dac030affbc4d48a1"
 url = "https://api.waqi.info/feed/geo:" + lat + ";" + lon + "/?token=" + aqicn_api_token
+aqi = ""
+city = ""
+time = ""
 
 #initialize pubnub
 pnconfig = PNConfiguration()
@@ -40,8 +43,13 @@ def main():
         .channels("aqi")\
         .with_presence()\
         .execute()
+
+    aqi_call_loop()
     
-    # loop()
+def aqi_call_loop():
+    aqi_call()
+    threading.Timer(1500, aqi_call_loop).start()
+
 
 # def here_now_callback(result, status):
 #     if status.is_error():
@@ -60,15 +68,17 @@ def aqi_call():
     except:
         sys.exit("url error")
 
-    # threading.Timer(10, loop).start()
-
-    #publish aqi
     data = json.loads(response.read())
+    aqi = data['data']['aqi']
+    city = data['data']['city']['name']
+    time = data['data']['time']['s']
+
+def publish_aqi():
     try:
         pubnub.publish().channel('aqi').message({
-            'aqi': data['data']['aqi'],
-            'city': data['data']['city']['name'],
-            'time': data['data']['time']['s']
+            'aqi': aqi,
+            'city': city,
+            'time': time
         }).sync()
     except PubNubException as e:
         handle_exception(e)
