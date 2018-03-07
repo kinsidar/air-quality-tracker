@@ -25,12 +25,11 @@ pubnub = PubNub(pnconfig)
 class myListener(SubscribeCallback):
     def status(self, pubnub, status):
         if status.category == PNStatusCategory.PNConnectedCategory:
-            #connected action here
             print("connected")
 
     def presence(self, pubnub, presence):
-        #presence action here
         print(presence.uuid)
+        aqi_call()
 
 def main():
     #add listener
@@ -42,7 +41,7 @@ def main():
         .with_presence()\
         .execute()
     
-    loop()
+    # loop()
 
 # def here_now_callback(result, status):
 #     if status.is_error():
@@ -55,13 +54,13 @@ def main():
 #     for occupant in channel_data.occupants:
 #         print("uuid: %s, state: %s" % (occupant.uuid, occupant.state))
 
-def loop():
+def aqi_call():
     try:
         response = urllib.request.urlopen(url)
     except:
         sys.exit("url error")
 
-    threading.Timer(10, loop).start()
+    # threading.Timer(10, loop).start()
 
     #publish aqi
     data = json.loads(response.read())
