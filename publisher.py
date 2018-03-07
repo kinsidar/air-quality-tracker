@@ -48,6 +48,10 @@ def main():
     
 def aqi_call_loop():
     aqi_call()
+    pubnub.here_now()\
+        .channels('aqi')\
+        .include_uuids(True)\
+        .async(here_now_callback)
     threading.Timer(1500, aqi_call_loop).start()
 
 def aqi_call():
@@ -71,6 +75,14 @@ def publish_aqi():
         }).sync()
     except PubNubException as e:
         handle_exception(e)
+
+def here_now_callback(result, status):
+    if status.is_error():
+        print("here now callback error")
+        return
+    for channel_data in result.channels:
+        if channel_data.occupancy != 0:
+            publish_aqi()
 
 if __name__ == "__main__":
    main()
