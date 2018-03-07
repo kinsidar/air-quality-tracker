@@ -2,10 +2,10 @@
 
 ![python ver](https://img.shields.io/pypi/pyversions/Django.svg)
 
-## Air quality index(AQI) display using pubnub and epoch
+## Air quality index(AQI) display using [pubnub](https://www.pubnub.com/) and [epoch](http://epochjs.github.io/epoch/)
 
 ## To Run:
-    - Add your [PubNub](https://www.pubnub.com/) publish and subscribe keys to publisher.py and subscriber.html
+    - Add your PubNub publish and subscribe keys to publisher.py and subscriber.html
     - Run publisher.py
     - Open Subscriber.html in your browser
 
