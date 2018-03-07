@@ -32,6 +32,8 @@ class myListener(SubscribeCallback):
 
     def presence(self, pubnub, presence):
         #publish aqi when subscriber connects
+        if aqi == "":
+            aqi_call()
         publish_aqi()
 
 def main():
@@ -80,9 +82,9 @@ def here_now_callback(result, status):
     if status.is_error():
         print("here now callback error")
         return
-    #get aqi data and publish if there is a subscriber
+    #get aqi data and publish if there is a subscriber(excluding publisher)
     for channel_data in result.channels:
-        if channel_data.occupancy != 0:
+        if channel_data.occupancy > 1:
             aqi_call()
             publish_aqi()
 
