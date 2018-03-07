@@ -18,8 +18,8 @@ time = ""
 
 #initialize pubnub
 pnconfig = PNConfiguration()
-pnconfig.subscribe_key = 'your sub key'
-pnconfig.publish_key = 'your pub key'
+pnconfig.subscribe_key = 'your subscribe key here'
+pnconfig.publish_key = 'your publish key here'
 pnconfig.ssl = True
 pnconfig.uuid = 'aqi publisher'
 
@@ -31,7 +31,7 @@ class myListener(SubscribeCallback):
             print("connected")
 
     def presence(self, pubnub, presence):
-        print(presence.uuid)
+        #publish aqi when subscriber connects
         publish_aqi()
 
 def main():
@@ -47,7 +47,7 @@ def main():
     aqi_call_loop()
     
 def aqi_call_loop():
-    aqi_call()
+    #check if subscriber is present. If true, get and publish aqi
     pubnub.here_now()\
         .channels('aqi')\
         .include_uuids(True)\
@@ -80,8 +80,10 @@ def here_now_callback(result, status):
     if status.is_error():
         print("here now callback error")
         return
+    #get aqi data and publish if there is a subscriber
     for channel_data in result.channels:
         if channel_data.occupancy != 0:
+            aqi_call()
             publish_aqi()
 
 if __name__ == "__main__":
