@@ -5,11 +5,13 @@ from pubnub.exceptions import PubNubException
 from pubnub.enums import PNStatusCategory, PNOperationType
 from pubnub.callbacks import SubscribeCallback
 import threading
-import urllib, json, sys
+import urllib
+import json
+import sys
 
 #AQICN API info and JSON structure at: http://aqicn.org/json-api/doc/
-lat = "37.7"
-lon = "-122.1"
+lat = "37.78"
+lon = "-122.4"
 aqicn_api_token = "214e3324769450fc0bc5688dac030affbc4d48a1"
 url = "https://api.waqi.info/feed/geo:" + lat + ";" + lon + "/?token=" + aqicn_api_token
 aqi = ""
@@ -18,8 +20,8 @@ time = ""
 
 #initialize pubnub
 pnconfig = PNConfiguration()
-pnconfig.subscribe_key = 'your subscribe key here'
-pnconfig.publish_key = 'your publish key here'
+pnconfig.subscribe_key = 'your sub key here'
+pnconfig.publish_key = 'your pub key here'
 pnconfig.ssl = True
 pnconfig.uuid = 'aqi publisher'
 
@@ -54,7 +56,7 @@ def aqi_call_loop():
         .channels('aqi')\
         .include_uuids(True)\
         .async(here_now_callback)
-    threading.Timer(1500, aqi_call_loop).start()
+    threading.Timer(60, aqi_call_loop).start()
 
 def aqi_call():
     try:
@@ -76,17 +78,20 @@ def publish_aqi():
             'time': time
         }).sync()
     except PubNubException as e:
-        handle_exception(e)
+        sys.exit("Pubnub publish exception", e)
 
 def here_now_callback(result, status):
+    global aqi
     if status.is_error():
-        print("here now callback error")
-        return
+        sys.exit("here now callback error")
     #get aqi data and publish if there is a subscriber(excluding publisher)
     for channel_data in result.channels:
+        #publish aqi if aqi value changes and there is a subscriber present
         if channel_data.occupancy > 1:
+            prev_aqi = aqi
             aqi_call()
-            publish_aqi()
+            if aqi != prev_aqi:
+                publish_aqi()
 
 if __name__ == "__main__":
    main()
